@@ -249,7 +249,7 @@ btrfs su cr /mnt/@/var_spool
 btrfs su cr /mnt/@/var_lib_libvirt_images
 btrfs su cr /mnt/@/var_lib_machines
 if [ "${install_mode}" = 'desktop' ]; then
-    btrfs su cr /mnt/@/var_lib_gdm
+    btrfs su cr /mnt/@/var_lib_sddm
     btrfs su cr /mnt/@/var_lib_AccountsService
 fi
 
@@ -338,7 +338,7 @@ output 'Installing the base system (it may take a while).'
 output "You may see an error when mkinitcpio tries to generate a new initramfs."
 output "It is okay. The script will regenerate the initramfs later in the installation process."
 
-pacstrap /mnt apparmor base chrony efibootmgr firewalld firefox grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts nano reflector sbctl snapper sudo zram-generator
+pacstrap /mnt apparmor amd-ucode base chrony efibootmgr firewalld firefox grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts ssdm nano reflector sbctl tlp snapper sudo zram-generator
 
 if [ "${virtualization}" = 'none' ]; then
     CPU=$(grep vendor_id /proc/cpuinfo)
@@ -592,6 +592,8 @@ systemctl enable snapper-timeline.timer --root=/mnt
 systemctl enable snapper-cleanup.timer --root=/mnt
 systemctl enable systemd-oomd --root=/mnt
 systemctl disable systemd-timesyncd --root=/mnt
+#systemctl enable sddm.service --root=/mnt
+#systemctl enable NetworkManager.service --root=/mnt
 
 if [ "${network_daemon}" = 'networkmanager' ]; then
     systemctl enable NetworkManager --root=/mnt
@@ -600,7 +602,7 @@ else
 fi
 
 if [ "${install_mode}" = 'desktop' ]; then
-    systemctl enable sddm --root=/mnt
+    systemctl enable sddm.service --root=/mnt
     rm /mnt/etc/resolv.conf
     ln -s /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
     systemctl enable systemd-resolved --root=/mnt
