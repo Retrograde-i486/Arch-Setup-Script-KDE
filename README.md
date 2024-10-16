@@ -13,10 +13,9 @@ Visit my Matrix group: https://invite.arcticfoxes.net/#/#tommy:arcticfoxes.net
 2. Flash the ISO onto an [USB Flash Drive](https://wiki.archlinux.org/index.php/USB_flash_installation_medium).
 3. Boot the live environment.
 4. Connect to the internet.
-5. `git clone https://github.com/tommytran732/Arch-Setup-Script/`
-6. `cd Arch-Setup-Script`
-7. `chmod u+x ./install.sh`
-8. `./install.sh`
+5. `curl -L -O https://raw.githubusercontent.com/TommyTran732/Arch-Setup-Script/main/install.sh` 
+6. `chmod u+x ./install.sh`
+7. `./install.sh`
 
 ### Snapper behavior
 The partition layout I use allows us to replicate the behavior found in openSUSE 🦎
