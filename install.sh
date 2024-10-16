@@ -333,7 +333,7 @@ mkdir -p /mnt/boot/efi
 mount -o nodev,nosuid,noexec "${ESP}" /mnt/boot/efi
 
 ## Pacstrap
-output 'Installing the base system (it may take a while).'
+output 'Installing the base system (this may take a while).'
 
 output "You may see an error when mkinitcpio tries to generate a new initramfs."
 output "It is okay. The script will regenerate the initramfs later in the installation process."
