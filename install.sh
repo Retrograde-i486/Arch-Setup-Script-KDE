@@ -613,3 +613,5 @@ sed -i 's/umask 022/umask 077/g' /mnt/etc/bash.bashrc
 # Finish up
 echo "Setup Complete, you may now wish to reboot (further changes can be done by chrooting into /mnt)."
 exit
+
+#The End
