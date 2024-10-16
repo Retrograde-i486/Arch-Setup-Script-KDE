@@ -5,8 +5,11 @@
 Yet another installer for Arch Linux, this time with KDE Plasma support! It sets up a BTRFS system with encrypted `/boot` and full snapper support (both snapshotting and rollback work!). It also includes various system hardening configurations. 
 
 Other things I've added:
-Linux-Zen kernel
-Firefox
+
+1. Linux-Zen kernel
+2. Firefox
+3. NeoVim
+4. Fastfetch
 
 The script is based on [easy-arch](https://github.com/classy-giraffe/easy-arch). However, it diverges substantially from the original project does not follow its development.
 

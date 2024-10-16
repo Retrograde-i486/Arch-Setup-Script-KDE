@@ -338,7 +338,7 @@ output 'Installing the base system (this may take a while).'
 output "You may see an error when mkinitcpio tries to generate a new initramfs."
 output "It is okay. The script will regenerate the initramfs later in the installation process."
 
-pacstrap /mnt amd-ucode base efibootmgr firefox firewalld chrony grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts nano reflector sbctl tlp snapper sudo xorg sddm plasma kde-applications zram-generator
+pacstrap /mnt amd-ucode base efibootmgr firefox firewalld chrony grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts nano neovim fastfetch reflector sbctl tlp snapper sudo xorg sddm plasma kde-applications zram-generator
 
 if [ "${virtualization}" = 'none' ]; then
     CPU=$(grep vendor_id /proc/cpuinfo)
