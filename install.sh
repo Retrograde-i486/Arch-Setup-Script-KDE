@@ -338,7 +338,7 @@ output 'Installing the base system (it may take a while).'
 output "You may see an error when mkinitcpio tries to generate a new initramfs."
 output "It is okay. The script will regenerate the initramfs later in the installation process."
 
-pacstrap /mnt apparmor amd-ucode base chrony efibootmgr firewalld firefox grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts ssdm nano reflector sbctl tlp snapper sudo zram-generator
+pacstrap /mnt amd-ucode base efibootmgr firefox firewalld chrony grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts nano reflector sbctl tlp snapper sudo xorg sddm plasma kde-applications zram-generator
 
 if [ "${virtualization}" = 'none' ]; then
     CPU=$(grep vendor_id /proc/cpuinfo)
@@ -434,9 +434,9 @@ sed -i 's/rootflags=subvol=${rootsubvol}//g' /mnt/etc/grub.d/20_linux_xen
 
 if [ "${use_luks}" = '1' ]; then
     UUID=$(blkid -s UUID -o value "${cryptroot}")
-    sed -i "s#quiet#rd.luks.name=${UUID}=cryptroot root=${BTRFS} lsm=landlock,lockdown,yama,integrity,apparmor,bpf mitigations=auto,nosmt spectre_v2=on spectre_bhi=on spec_store_bypass_disable=on tsx=off kvm.nx_huge_pages=force nosmt=force l1d_flush=on spec_rstack_overflow=safe-ret gather_data_sampling=force reg_file_data_sampling=on random.trust_bootloader=off random.trust_cpu=off intel_iommu=on amd_iommu=force_isolation efi=disable_early_pci_dma iommu=force iommu.passthrough=0 iommu.strict=1 slab_nomerge init_on_alloc=1 init_on_free=1 pti=on vsyscall=none ia32_emulation=0 page_alloc.shuffle=1 randomize_kstack_offset=on debugfs=off lockdown=confidentiality module.sig_enforce=1#g" /mnt/etc/default/grub
+    sed -i "s#quiet#rd.luks.name=${UUID}=cryptroot root=${BTRFS} lsm=landlock,lockdown,yama,integrity,bpf mitigations=auto,nosmt spectre_v2=on spectre_bhi=on spec_store_bypass_disable=on tsx=off kvm.nx_huge_pages=force nosmt=force l1d_flush=on spec_rstack_overflow=safe-ret gather_data_sampling=force reg_file_data_sampling=on random.trust_bootloader=off random.trust_cpu=off intel_iommu=on amd_iommu=force_isolation efi=disable_early_pci_dma iommu=force iommu.passthrough=0 iommu.strict=1 slab_nomerge init_on_alloc=1 init_on_free=1 pti=on vsyscall=none ia32_emulation=0 page_alloc.shuffle=1 randomize_kstack_offset=on debugfs=off lockdown=confidentiality module.sig_enforce=1#g" /mnt/etc/default/grub
 else
-    sed -i "s#quiet#root=${BTRFS} lsm=landlock,lockdown,yama,integrity,apparmor,bpf mitigations=auto,nosmt spectre_v2=on spectre_bhi=on spec_store_bypass_disable=on tsx=off kvm.nx_huge_pages=force nosmt=force l1d_flush=on spec_rstack_overflow=safe-ret gather_data_sampling=force reg_file_data_sampling=on random.trust_bootloader=off random.trust_cpu=off intel_iommu=on amd_iommu=force_isolation efi=disable_early_pci_dma iommu=force iommu.passthrough=0 iommu.strict=1 slab_nomerge init_on_alloc=1 init_on_free=1 pti=on vsyscall=none ia32_emulation=0 page_alloc.shuffle=1 randomize_kstack_offset=on debugfs=off lockdown=confidentiality module.sig_enforce=1#g" /mnt/etc/default/grub
+    sed -i "s#quiet#root=${BTRFS} lsm=landlock,lockdown,yama,integrity,bpf mitigations=auto,nosmt spectre_v2=on spectre_bhi=on spec_store_bypass_disable=on tsx=off kvm.nx_huge_pages=force nosmt=force l1d_flush=on spec_rstack_overflow=safe-ret gather_data_sampling=force reg_file_data_sampling=on random.trust_bootloader=off random.trust_cpu=off intel_iommu=on amd_iommu=force_isolation efi=disable_early_pci_dma iommu=force iommu.passthrough=0 iommu.strict=1 slab_nomerge init_on_alloc=1 init_on_free=1 pti=on vsyscall=none ia32_emulation=0 page_alloc.shuffle=1 randomize_kstack_offset=on debugfs=off lockdown=confidentiality module.sig_enforce=1#g" /mnt/etc/default/grub
 fi
 
 ## Add keyfile to the initramfs to avoid double password.
@@ -582,18 +582,11 @@ EOF
 sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /mnt/etc/sudoers
 
 ## Enable services
-systemctl enable apparmor --root=/mnt
-systemctl enable chronyd --root=/mnt
-systemctl enable firewalld --root=/mnt
 systemctl enable fstrim.timer --root=/mnt
-systemctl enable grub-btrfsd.service --root=/mnt
-systemctl enable reflector.timer --root=/mnt
 systemctl enable snapper-timeline.timer --root=/mnt
 systemctl enable snapper-cleanup.timer --root=/mnt
 systemctl enable systemd-oomd --root=/mnt
 systemctl disable systemd-timesyncd --root=/mnt
-#systemctl enable sddm.service --root=/mnt
-#systemctl enable NetworkManager.service --root=/mnt
 
 if [ "${network_daemon}" = 'networkmanager' ]; then
     systemctl enable NetworkManager --root=/mnt
@@ -602,7 +595,6 @@ else
 fi
 
 if [ "${install_mode}" = 'desktop' ]; then
-    systemctl enable sddm.service --root=/mnt
     rm /mnt/etc/resolv.conf
     ln -s /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
     systemctl enable systemd-resolved --root=/mnt
