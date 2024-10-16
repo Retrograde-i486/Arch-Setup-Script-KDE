@@ -600,7 +600,7 @@ else
 fi
 
 if [ "${install_mode}" = 'desktop' ]; then
-    systemctl enable gdm --root=/mnt
+    systemctl enable sddm --root=/mnt
     rm /mnt/etc/resolv.conf
     ln -s /run/systemd/resolve/stub-resolv.conf /mnt/etc/resolv.conf
     systemctl enable systemd-resolved --root=/mnt
