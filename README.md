@@ -2,18 +2,17 @@
 
 [![ShellCheck](https://github.com/TommyTran732/Arch-Setup-Script/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/TommyTran732/Arch-Setup-Script/actions/workflows/shellcheck.yml)
 
-This is my installer for Arch Linux. It sets up a BTRFS system with encrypted `/boot` and full snapper support (both snapshotting and rollback work!). It also includes various system hardening configurations.
+Yet another installer for Arch Linux. This time with KDE Plasma support! It sets up a BTRFS system with encrypted `/boot` and full snapper support (both snapshotting and rollback work!). It also includes various system hardening configurations.
+
 
 The script is based on [easy-arch](https://github.com/classy-giraffe/easy-arch). However, it diverges substantially from the original project does not follow its development.
-
-Visit my Matrix group: https://invite.arcticfoxes.net/#/#tommy:arcticfoxes.net
 
 ### How to use it?
 1. Download an Arch Linux ISO from [here](https://archlinux.org/download/)
 2. Flash the ISO onto an [USB Flash Drive](https://wiki.archlinux.org/index.php/USB_flash_installation_medium).
 3. Boot the live environment.
 4. Connect to the internet.
-5. `curl -L -O https://raw.githubusercontent.com/TommyTran732/Arch-Setup-Script/main/install.sh` 
+5. `curl -L -O https://raw.githubusercontent.com/Retrograde-i486/Arch-Setup-Script-KDE/refs/heads/main/install.sh` 
 6. `chmod u+x ./install.sh`
 7. `./install.sh`
 
