@@ -587,6 +587,8 @@ systemctl enable snapper-timeline.timer --root=/mnt
 systemctl enable snapper-cleanup.timer --root=/mnt
 systemctl enable systemd-oomd --root=/mnt
 systemctl disable systemd-timesyncd --root=/mnt
+#Start Simple Desktop Display Manager
+systemctl enable sddm --root=/mnt
 
 if [ "${network_daemon}" = 'networkmanager' ]; then
     systemctl enable NetworkManager --root=/mnt
