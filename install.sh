@@ -270,7 +270,7 @@ chattr +C /mnt/@/var_spool
 chattr +C /mnt/@/var_lib_libvirt_images
 chattr +C /mnt/@/var_lib_machines
 if [ "${install_mode}" = 'desktop' ]; then
-    chattr +C /mnt/@/var_lib_gdm
+    chattr +C /mnt/@/var_lib_kde
     chattr +C /mnt/@/var_lib_AccountsService
 fi
 
@@ -298,7 +298,7 @@ output 'Mounting the newly created subvolumes.'
 mount -o ssd,noatime,compress=zstd "${BTRFS}" /mnt
 mkdir -p /mnt/{boot,root,home,.snapshots,srv,tmp,var/log,var/crash,var/cache,var/tmp,var/spool,var/lib/libvirt/images,var/lib/machines}
 if [ "${install_mode}" = 'desktop' ]; then
-    mkdir -p /mnt/{var/lib/gdm,var/lib/AccountsService}
+    mkdir -p /mnt/{var/lib/kde,var/lib/AccountsService}
 fi
 
 if [ "${use_luks}" = '1' ]; then
@@ -320,11 +320,11 @@ mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var_li
 
 # GNOME requires /var/lib/gdm and /var/lib/AccountsService to be writeable when booting into a readonly snapshot. Thus we sadly have to split them.
 if [ "${install_mode}" = 'desktop' ]; then
-    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var_lib_gdm $BTRFS /mnt/var/lib/gdm
+    mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var_lib_gdm $BTRFS /mnt/var/lib/kde
     mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/var_lib_AccountsService $BTRFS /mnt/var/lib/AccountsService
 fi
 
-### The encryption is splitted as we do not want to include it in the backup with snap-pac.
+### The encryption is split as we do not want to include it in the backup with snap-pac.
 if [ "${use_luks}" = '1' ]; then
     mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@/cryptkey "${BTRFS}" /mnt/cryptkey
 fi
@@ -338,7 +338,7 @@ output 'Installing the base system (it may take a while).'
 output "You may see an error when mkinitcpio tries to generate a new initramfs."
 output "It is okay. The script will regenerate the initramfs later in the installation process."
 
-pacstrap /mnt apparmor base chrony efibootmgr firewalld grub grub-btrfs inotify-tools linux-firmware linux-hardened linux-lts nano reflector sbctl snapper sudo zram-generator
+pacstrap /mnt apparmor base chrony efibootmgr firewalld grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts nano reflector sbctl snapper sudo zram-generator
 
 if [ "${virtualization}" = 'none' ]; then
     CPU=$(grep vendor_id /proc/cpuinfo)
@@ -356,7 +356,7 @@ if [ "${network_daemon}" = 'networkmanager' ]; then
 fi
 
 if [ "${install_mode}" = 'desktop' ]; then
-    pacstrap /mnt nautilus gdm gnome-console gnome-control-center flatpak pipewire-alsa pipewire-pulse pipewire-jack
+    pacstrap /mnt plasma plasma-wayland-session kde-applications xorg sddm pipewire-pulse pipewire-jack
 elif [ "${install_mode}" = 'server' ]; then
     pacstrap /mnt openssh unbound
 fi
@@ -480,10 +480,10 @@ mkdir -p /mnt/etc/systemd/coredump.conf.d
 unpriv curl -s https://raw.githubusercontent.com/TommyTran732/Linux-Setup-Scripts/main/etc/systemd/coredump.conf.d/disable.conf | tee /mnt/etc/systemd/coredump.conf.d/disable.conf > /dev/null
 
 # Disable XWayland
-if [ "${install_mode}" = 'desktop' ]; then
-    mkdir -p /mnt/etc/systemd/user/org.gnome.Shell@wayland.service.d
-    unpriv curl -s https://raw.githubusercontent.com/TommyTran732/Linux-Setup-Scripts/main/etc/systemd/user/org.gnome.Shell%40wayland.service.d/override.conf | tee /mnt/etc/systemd/user/org.gnome.Shell@wayland.service.d/override.conf > /dev/null
-fi
+#if [ "${install_mode}" = 'desktop' ]; then
+#    mkdir -p /mnt/etc/systemd/user/org.gnome.Shell@wayland.service.d
+#    unpriv curl -s https://raw.githubusercontent.com/TommyTran732/Linux-Setup-Scripts/main/etc/systemd/user/org.gnome.Shell%40wayland.service.d/override.conf | tee /mnt/etc/systemd/user/org.gnome.Shell@wayland.service.d/override.conf > /dev/null
+#fi
 
 # Setup dconf
 
@@ -617,5 +617,5 @@ sed -i 's/^HOME_MODE/#HOME_MODE/g' /mnt/etc/login.defs
 sed -i 's/umask 022/umask 077/g' /mnt/etc/bash.bashrc
 
 # Finish up
-echo "Done, you may now wish to reboot (further changes can be done by chrooting into /mnt)."
+echo "Setup Complete, you may now wish to reboot (further changes can be done by chrooting into /mnt)."
 exit
