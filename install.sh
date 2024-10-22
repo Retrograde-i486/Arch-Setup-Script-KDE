@@ -192,6 +192,9 @@ pacman -Sy
 ## Installing curl
 pacman -S --noconfirm curl
 
+#Installing wget
+pacman -S --noconfirm wget
+
 ## Wipe the disk
 sgdisk --zap-all "${disk}"
 
@@ -338,7 +341,7 @@ output 'Installing the base system (this may take a while).'
 output "You may see an error when mkinitcpio tries to generate a new initramfs."
 output "It is okay. The script will regenerate the initramfs later in the installation process."
 
-pacstrap /mnt amd-ucode base efibootmgr firefox firewalld chrony grub grub-btrfs inotify-tools linux-firmware linux-zen linux-lts nano neovim fastfetch reflector sbctl tlp snapper sudo xorg sddm plasma kde-applications zram-generator
+pacstrap /mnt amd-ucode base efibootmgr firefox firewalld chrony grub grub-btrfs inotify-tools linux-firmware linux-zen linux-zen-headers linux-lts linux-lts-headers nano neovim fastfetch reflector sbctl tlp snapper sudo xorg sddm plasma kde-applications zram-generator htop
 
 if [ "${virtualization}" = 'none' ]; then
     CPU=$(grep vendor_id /proc/cpuinfo)
